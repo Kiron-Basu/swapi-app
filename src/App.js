@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+/* eslint-disable max-len */
+/* eslint-disable react/prop-types */
+/* eslint-disable arrow-parens */
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import './App.css';
+import SpeakerIcon from './components/SpeakerIcon/SpeakerIcon';
+import SearchBar from './components/SearchBar/SearchBar';
+import CrawlContainer from './containers/CrawlContainer/CrawlContainer';
+// import actions
+import { requestFilmSearch, searchFieldChange } from './store/actions';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// redux connections
+const mapStateToProps = state => ({
+  searchField: state.search.searchField,
+  crawlText: state.filmText.crawlText,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onSearchFieldChange: (event) => dispatch(searchFieldChange(event.target.value)), // made mistake of not doing .target.value --> 'text' instead
+  onSubmitSearch: (query) => dispatch(requestFilmSearch(query)),
+});
+// PureComponent implemented however will not re-render any non-shallow state structures
+class App extends PureComponent {
+  render() {
+    console.log(this.props.searchField);
+    const { onSubmitSearch, onSearchFieldChange } = this.props; // destructuring method from mapto..disaptch
+    return (
+      <div>
+        <SpeakerIcon />
+        <SearchBar submitSearch={() => onSubmitSearch(this.props.searchField)} onChange={onSearchFieldChange} />
+        {this.props.crawlText ? <CrawlContainer crawlText={this.props.crawlText} /> : null }
+      </div>
+    );
+  }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

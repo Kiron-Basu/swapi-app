@@ -1,0 +1,10 @@
+.SpeakerIcon {
+    position: absolute;
+    top:1.5rem;
+    right: 3rem;
+    color: red;
+}
+
+.SpeakerIcon:hover {
+    cursor: pointer;
+}
